@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#8a6f9e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="心晴">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <title>心晴 · 个人情绪日记</title>
+  <style>
+    :root{--bg:#f7f5f2;--panel:#fff;--text:#252321;--muted:#746f69;--line:#e7e1da;--accent:#8a6f9e;--accent2:#d9cee2;--good:#5b8b72;--warm:#c98562;--shadow:0 12px 36px rgba(55,43,35,.08);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    @media(prefers-color-scheme:dark){:root{--bg:#171616;--panel:#211f1f;--text:#f2efeb;--muted:#b8b0a9;--line:#383432;--accent:#b99bc9;--accent2:#3c3142;--good:#7fb496;--warm:#dc9b78;--shadow:none}}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text)} button,input,select,textarea{font:inherit;color:inherit} button{cursor:pointer}
+    .app{max-width:1080px;margin:auto;padding:22px;padding-bottom:max(22px,env(safe-area-inset-bottom))}.top{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:22px}.brand h1{font-size:26px;margin:0 0 4px}.brand p{margin:0;color:var(--muted);font-size:14px}.top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.privacy{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tab{border:1px solid var(--line);background:transparent;border-radius:999px;padding:9px 15px}.tab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+    .view{display:none}.view.active{display:block}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.card h2,.card h3{margin:0 0 14px}.sub{color:var(--muted);font-size:13px;margin:-8px 0 16px}
+    .field{display:grid;gap:7px;margin:14px 0}.field label,.label{font-size:14px;font-weight:600}.control{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:11px;padding:10px 12px;outline:none}.control:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)} textarea.control{resize:vertical;min-height:72px}
+    .emotion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.emotion{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 6px;text-align:center}.emotion span{display:block;font-size:22px;margin-bottom:3px}.emotion.selected{border-color:var(--accent);background:var(--accent2)}
+    .custom-row{display:flex;gap:8px}.custom-row .control{flex:1}.suggestion-box{background:var(--bg);border-left:3px solid var(--good);border-radius:0 12px 12px 0;padding:13px 14px}.suggestion-box h3{font-size:15px;margin:0 0 7px}.suggestion-box ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px}.suggestion-box li+li{margin-top:5px}
+    .range-line{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.range-line output{min-width:54px;text-align:right;font-weight:600}.checks{display:flex;gap:8px;flex-wrap:wrap}.chip{position:relative}.chip input{position:absolute;opacity:0}.chip label{display:block;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:var(--bg);font-size:13px}.chip input:checked+label{background:var(--accent2);border-color:var(--accent)}
+    .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px 14px}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.danger{color:#a64f4f}.notice{padding:12px 14px;border-radius:12px;background:var(--accent2);font-size:14px;margin-top:14px;display:none}.notice.show{display:block}
+    .today-list{display:grid;gap:10px}.mini{border-bottom:1px solid var(--line);padding:10px 0}.mini:last-child{border:0}.mini-head{display:flex;justify-content:space-between;gap:10px}.mini p{margin:5px 0 0;color:var(--muted);font-size:13px}.empty{color:var(--muted);padding:18px 0;text-align:center}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.stat b{display:block;font-size:26px;margin-top:5px}.stat span{color:var(--muted);font-size:13px}.bars{display:grid;gap:11px}.bar{display:grid;grid-template-columns:92px 1fr 32px;gap:9px;align-items:center;font-size:13px}.track{height:10px;background:var(--bg);border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--accent);border-radius:99px}.insight-list{display:grid;gap:10px}.insight{padding:12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 10px 10px 0}.insight b{display:block;margin-bottom:3px}.insight span{font-size:13px;color:var(--muted)}
+    .history-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.history-tools .control{width:auto;min-width:170px}.entry-list{display:grid;gap:12px}.entry{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.entry-top{display:flex;justify-content:space-between;gap:12px}.entry-title{display:flex;gap:9px;align-items:center}.entry-emoji{font-size:25px}.entry-meta{color:var(--muted);font-size:13px}.entry p{margin:10px 0 0;white-space:pre-wrap}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:12px;background:var(--bg);border-radius:999px;padding:4px 8px}.delete{border:0;background:transparent;color:var(--muted);padding:4px 7px}.delete:hover{color:#ad5151}
+    .data-box{display:grid;gap:12px}.file-label{display:inline-block}.file-label input{display:none}.foot{text-align:center;color:var(--muted);font-size:12px;margin:22px 0 4px}
+    dialog{max-width:430px;width:calc(100% - 32px);border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);padding:22px;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(20,18,18,.45)}dialog h2{margin-top:0}dialog ol{padding-left:22px;color:var(--muted)}dialog li+li{margin-top:8px}.install-icon{width:72px;height:72px;border-radius:16px;display:block;margin-bottom:14px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.emotion-grid{grid-template-columns:repeat(3,1fr)}.stats{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.privacy{align-self:flex-start}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="brand"><h1>心晴</h1><p>看见每一种情绪，也看见完整的自己</p></div>
+    <div class="top-actions"><div class="privacy">◉ 数据仅保存在当前设备</div><button id="install-help" class="btn">安装到 iPhone</button></div>
+  </header>
+
+  <nav class="tabs" aria-label="页面导航">
+    <button class="tab active" data-view="record">记录此刻</button>
+    <button class="tab" data-view="overview">了解自己</button>
+    <button class="tab" data-view="history">情绪足迹</button>
+    <button class="tab" data-view="data">备份数据</button>
+  </nav>
+
+  <section id="record" class="view active">
+    <div class="grid">
+      <form id="mood-form" class="card">
+        <h2>现在的我</h2><p class="sub">一分钟也可以。记录事实和感受，不要求自己立即解决。</p>
+        <div class="field"><label for="when">时间</label><input id="when" class="control" type="datetime-local" required></div>
+        <div class="field"><span class="label">最主要的情绪</span><div id="emotions" class="emotion-grid"></div><div class="custom-row"><input id="custom-emotion" class="control" placeholder="没有合适的？输入自己的情绪"><button id="add-emotion" class="btn" type="button">添加</button></div></div>
+        <div class="field"><label for="intensity">情绪强度</label><div class="range-line"><input id="intensity" type="range" min="1" max="10" value="5"><output id="intensity-out">5 / 10</output></div></div>
+        <div class="field"><label for="event">发生了什么</label><textarea id="event" class="control" placeholder="只写可以观察到的事情"></textarea></div>
+        <div class="field"><label for="thought">脑中最明显的想法</label><textarea id="thought" class="control" placeholder="例如：我担心自己做不好；今天的阳光让我很舒服"></textarea></div>
+        <div class="field"><span class="label">身体感受</span><div id="body-options" class="checks"></div></div>
+        <div class="field"><span class="label">此刻的需要</span><div id="need-options" class="checks"></div></div>
+        <div class="field"><label for="action">我准备怎样照顾自己</label><select id="action" class="control"></select></div>
+        <div id="suggestion-box" class="suggestion-box"><h3>给此刻的建议</h3><ul id="suggestions"><li>选择情绪后，这里会给出几个轻量建议。</li></ul></div>
+        <div class="field"><label for="positive">今天值得记住的小事</label><textarea id="positive" class="control" placeholder="开心、满足、感激、完成的小事都可以"></textarea></div>
+        <div class="field"><label for="note">补充记录</label><textarea id="note" class="control" placeholder="可选"></textarea></div>
+        <div class="actions"><button class="btn primary" type="submit">保存这次记录</button><button id="ask-gpt" class="btn" type="button">请 Codex 帮我</button><button class="btn" type="reset">重新填写</button></div>
+        <div id="save-notice" class="notice" role="status"></div>
+      </form>
+      <aside class="card">
+        <h3>今天的片段</h3><p class="sub">不需要每次都完整填写。</p><div id="today-list" class="today-list"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="overview" class="view">
+    <div class="stats"><div class="stat"><span>近 7 天记录</span><b id="stat-count">0</b></div><div class="stat"><span>平均强度</span><b id="stat-intensity">—</b></div><div class="stat"><span>积极情绪占比</span><b id="stat-positive">—</b></div></div>
+    <div class="grid">
+      <div class="card"><h3>常见情绪</h3><p class="sub">次数反映出现频率，不代表情绪好坏。</p><div id="emotion-bars" class="bars"></div></div>
+      <div class="card"><h3>最近看到的模式</h3><p class="sub">至少记录三次后，模式会更有参考价值。</p><div id="insights" class="insight-list"></div></div>
+    </div>
+  </section>
+
+  <section id="history" class="view">
+    <div class="history-tools"><select id="filter-emotion" class="control"><option value="">全部情绪</option></select><input id="search" class="control" type="search" placeholder="搜索事件、想法或小事"></div>
+    <div id="entry-list" class="entry-list"></div>
+  </section>
+
+  <section id="data" class="view">
+    <div class="card data-box">
+      <h2>备份与迁移</h2><p class="sub">浏览器数据可能因清理缓存而消失，建议定期导出 JSON 备份。</p>
+      <div class="field"><label for="happy-list">我的开心清单</label><textarea id="happy-list" class="control" rows="7" placeholder="每行写一件通常能让你舒服或开心一点的事情"></textarea><span class="sub">例如：散步 20 分钟、喝热饮、和朋友吃饭、晒太阳、整理桌面、看一集轻松的剧。</span><button id="save-happy-list" class="btn" type="button">保存开心清单</button></div>
+      <div class="actions"><button id="export-json" class="btn primary">导出完整备份</button><button id="export-csv" class="btn">导出表格 CSV</button><label class="btn file-label">导入备份<input id="import-json" type="file" accept="application/json"></label></div>
+      <div class="actions"><button id="clear-data" class="btn danger">清空全部本地记录</button></div><div id="data-notice" class="notice" role="status"></div>
+    </div>
+  </section>
+  <p class="foot">它帮助你观察自己，不替代专业心理或医疗支持。</p>
+</main>
+
+<dialog id="install-dialog">
+  <img class="install-icon" src="./icons/apple-touch-icon.png" alt="心晴 App 图标">
+  <h2>安装“心晴”到 iPhone</h2>
+  <ol>
+    <li>请使用 Safari 打开这个页面。</li>
+    <li>点击浏览器底部的“分享”按钮。</li>
+    <li>向下滑动并选择“添加到主屏幕”。</li>
+    <li>名称保留为“心晴”，然后点击“添加”。</li>
+  </ol>
+  <p class="sub">安装后可从桌面全屏打开。情绪记录仍只保存在这台手机中，请定期导出备份。</p>
+  <form method="dialog"><button class="btn primary">我知道了</button></form>
+</dialog>
+
+<script>
+const KEY='xin-qing-mood-journal-v1';
+const CUSTOM_KEY='xin-qing-custom-emotions-v1';
+const HAPPY_KEY='xin-qing-happy-list-v1';
+const emotions=[
+ {n:'开心',e:'😊',p:true},{n:'满足',e:'🌿',p:true},{n:'平静',e:'😌',p:true},{n:'期待',e:'✨',p:true},
+ {n:'难过',e:'😢',p:false},{n:'焦虑',e:'😟',p:false},{n:'愤怒',e:'😠',p:false},{n:'孤独',e:'🌧️',p:false},
+ {n:'内疚',e:'🫥',p:false},{n:'疲惫',e:'😴',p:false},{n:'困惑',e:'🌫️',p:false},{n:'想念',e:'💭',p:false}
+];
+const bodies=['放松','有活力','心跳快','胸口紧','头痛','胃不舒服','肩颈紧','疲惫'];
+const needs=['休息','陪伴','被理解','确定感','空间','表达','完成感','运动','安全感','娱乐'];
+const actions=['暂时不处理，只观察','散步或运动','休息或睡一会','联系朋友','直接表达需要','写下来','回到一件小任务','听音乐或洗澡','寻求专业支持'];
+let records=[];let selectedEmotion='';
+try{records=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){records=[]}
+let customEmotions=[];try{customEmotions=JSON.parse(localStorage.getItem(CUSTOM_KEY)||'[]')}catch(e){customEmotions=[]}
+let happyActivities=[];try{happyActivities=JSON.parse(localStorage.getItem(HAPPY_KEY)||'[]')}catch(e){happyActivities=[]}
+const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
+function localNow(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function save(){localStorage.setItem(KEY,JSON.stringify(records))}
+function dateText(s){return new Date(s).toLocaleString('zh-CN',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+function checkboxSet(target,items,prefix){$(target).innerHTML=items.map((x,i)=>`<span class="chip"><input id="${prefix}${i}" type="checkbox" value="${x}"><label for="${prefix}${i}">${x}</label></span>`).join('')}
+function setup(){
+ $('#when').value=localNow();
+ renderEmotionChoices();
+ checkboxSet('#body-options',bodies,'b');checkboxSet('#need-options',needs,'n');
+ $('#action').innerHTML=actions.map(x=>`<option>${x}</option>`).join('');
+ $('#happy-list').value=(happyActivities.length?happyActivities:['散步或运动 20 分钟','晒太阳或到户外走走','联系一个让我感到安心的朋友','洗澡、喝热饮或好好吃一顿','完成一件十分钟以内的小任务','听喜欢的音乐或看轻松的内容']).join('\n');
+}
+function renderEmotionChoices(){const all=[...emotions,...customEmotions.map(n=>({n,e:'🫧',p:null}))];$('#emotions').innerHTML=all.map(x=>`<button type="button" class="emotion" data-emotion="${esc(x.n)}"><span>${x.e}</span>${esc(x.n)}</button>`).join('');$('#filter-emotion').innerHTML='<option value="">全部情绪</option>'+all.map(x=>`<option>${esc(x.n)}</option>`).join('')}
+function selectEmotion(name){selectedEmotion=name;$$('.emotion').forEach(b=>b.classList.toggle('selected',b.dataset.emotion===name));renderSuggestions()}
+$('#add-emotion').addEventListener('click',()=>{const n=$('#custom-emotion').value.trim();if(!n)return;if(!emotions.some(x=>x.n===n)&&!customEmotions.includes(n)){customEmotions.push(n);localStorage.setItem(CUSTOM_KEY,JSON.stringify(customEmotions));renderEmotionChoices()}selectEmotion(n);$('#custom-emotion').value=''});
+$('#intensity').addEventListener('input',e=>{$('#intensity-out').textContent=e.target.value+' / 10';renderSuggestions()});
+$('#emotions').addEventListener('click',e=>{const b=e.target.closest('.emotion');if(b)selectEmotion(b.dataset.emotion)});
+$('#mood-form').addEventListener('reset',()=>setTimeout(()=>{selectedEmotion='';selectEmotion('');$('#when').value=localNow();$('#intensity-out').textContent='5 / 10'},0));
+function renderSuggestions(){if(!selectedEmotion){$('#suggestions').innerHTML='<li>选择情绪后，这里会给出几个轻量建议。</li>';return}const level=+$('#intensity').value,tone=emotionInfo(selectedEmotion).p;let list=[];if(tone===true){list=['停留半分钟，注意身体里舒服的感觉','写下是什么带来了这种感受','考虑把这件小事再延长一点或与人分享']}else if(tone===null){list=['先描述这种自定义情绪对你来说是什么感觉','注意它在身体的哪个位置最明显','再选择：我想延长它、理解它，还是让它缓和一点？']}else{const personal=happyActivities.length?happyActivities:$('#happy-list').value.split('\n').map(x=>x.trim()).filter(Boolean);if(level>=8)list.push('先暂停重大决定和长消息，喝水并让身体离开当前刺激');if(personal.length)list.push(personal[Math.floor(Math.random()*personal.length)]);const map={焦虑:'做五次缓慢呼吸，再处理一个最小步骤',难过:'允许自己难过十分钟，再联系一个安全的人',愤怒:'暂时离开争执场景，用走路释放身体张力',孤独:'主动联系一位朋友，提出一个具体的小邀请',疲惫:'降低今天的要求，优先吃饭、洗澡或休息',内疚:'区分可以修复的责任和无法改变的过去',想念:'提醒自己这是情绪，不是必须采取行动的指令'};list.push(map[selectedEmotion]||'先命名需要，再选择一个十分钟以内的照顾行动');list.push('如果不舒服持续加重，联系可信任的人或专业支持')}$('#suggestions').innerHTML=list.slice(0,3).map(x=>`<li>${esc(x)}</li>`).join('')}
+function currentPrompt(){const checked=prefix=>$$(`input[id^="${prefix}"]:checked`).map(x=>x.value);return `请作为温和、现实导向的情绪支持助手，根据我当前这一条记录帮助我。不要诊断，不要替我猜测他人的心理，也不要让我继续反刍已经讨论过的人际关系。\n\n情绪：${selectedEmotion||'未选择'}\n强度：${$('#intensity').value}/10\n发生的事情：${$('#event').value.trim()||'未填写'}\n我的想法：${$('#thought').value.trim()||'未填写'}\n身体感受：${checked('b').join('、')||'未填写'}\n此刻需要：${checked('n').join('、')||'未填写'}\n我想到的行动：${$('#action').value}\n今天值得记住：${$('#positive').value.trim()||'未填写'}\n\n请依次给我：1）一句情绪确认；2）区分事实与解释；3）三个十分钟内可以做的具体行动，其中至少一个参考我的需要；4）如果这是旧问题反刍，直接提醒我停止继续分析并回到自己。`}
+$('#ask-gpt').addEventListener('click',async()=>{const prompt=currentPrompt();try{if(window.openai&&typeof window.openai.sendFollowUpMessage==='function'){await window.openai.sendFollowUpMessage({prompt,title:'把这次情绪记录交给 Codex'});show('#save-notice','已将当前这一次记录交给 Codex。')}else{await navigator.clipboard.writeText(prompt);show('#save-notice','分析内容已复制。请回到 Codex 对话框粘贴发送。')}}catch(e){show('#save-notice','浏览器未允许自动复制。请在备忘录中手动整理后发送给 Codex。')}});
+$('#mood-form').addEventListener('submit',e=>{
+ e.preventDefault();if(!selectedEmotion){show('#save-notice','请先选择一种最主要的情绪。');return}
+ const checked=prefix=>$$(`input[id^="${prefix}"]:checked`).map(x=>x.value);
+ records.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),time:$('#when').value,emotion:selectedEmotion,intensity:+$('#intensity').value,event:$('#event').value.trim(),thought:$('#thought').value.trim(),body:checked('b'),needs:checked('n'),action:$('#action').value,positive:$('#positive').value.trim(),note:$('#note').value.trim()});
+ save();show('#save-notice','已经记下来了。今天不需要把所有情绪都解决。');e.target.reset();renderAll();
+});
+function show(id,text){const n=$(id);n.textContent=text;n.classList.add('show')}
+function renderToday(){const today=new Date().toDateString();const list=records.filter(r=>new Date(r.time).toDateString()===today).sort((a,b)=>b.time.localeCompare(a.time));$('#today-list').innerHTML=list.length?list.map(r=>`<div class="mini"><div class="mini-head"><b>${emotionInfo(r.emotion).e} ${esc(r.emotion)} · ${r.intensity}/10</b><span class="entry-meta">${dateText(r.time)}</span></div>${r.event?`<p>${esc(r.event)}</p>`:''}${r.positive?`<p>值得记住：${esc(r.positive)}</p>`:''}</div>`).join(''):'<div class="empty">今天还没有记录。开心的小事也值得写下来。</div>'}
+function emotionInfo(name){return emotions.find(x=>x.n===name)||{e:'🫧',p:null}}
+function recent(days){const min=Date.now()-days*86400000;return records.filter(r=>new Date(r.time).getTime()>=min)}
+function renderOverview(){const rs=recent(7);$('#stat-count').textContent=rs.length;$('#stat-intensity').textContent=rs.length?(rs.reduce((s,r)=>s+r.intensity,0)/rs.length).toFixed(1):'—';$('#stat-positive').textContent=rs.length?Math.round(100*rs.filter(r=>emotionInfo(r.emotion).p).length/rs.length)+'%':'—';
+ const counts=records.reduce((a,r)=>(a[r.emotion]=(a[r.emotion]||0)+1,a),{});const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7),max=sorted[0]?.[1]||1;$('#emotion-bars').innerHTML=sorted.length?sorted.map(([n,v])=>`<div class="bar"><span>${emotionInfo(n).e} ${esc(n)}</span><span class="track"><span class="fill" style="display:block;width:${v/max*100}%"></span></span><b>${v}</b></div>`).join(''):'<div class="empty">有记录后会显示常见情绪。</div>';
+ renderInsights();}
+function topFrom(field){const a={};records.forEach(r=>(r[field]||[]).forEach(x=>a[x]=(a[x]||0)+1));return Object.entries(a).sort((x,y)=>y[1]-x[1])[0]}
+function renderInsights(){const out=[];if(records.length>=3){const top=Object.entries(records.reduce((a,r)=>(a[r.emotion]=(a[r.emotion]||0)+1,a),{})).sort((a,b)=>b[1]-a[1])[0];if(top)out.push(['最常出现的情绪',`${top[0]}，共记录 ${top[1]} 次`]);const need=topFrom('needs');if(need)out.push(['最常被忽略的需要',`${need[0]}，出现 ${need[1]} 次`]);const body=topFrom('body');if(body)out.push(['常见身体信号',`${body[0]}，出现 ${body[1]} 次`]);const pos=records.filter(r=>r.positive).length;if(pos)out.push(['积极片段',`你已经记下 ${pos} 个值得保存的小事`]);}$('#insights').innerHTML=out.length?out.map(x=>`<div class="insight"><b>${x[0]}</b><span>${x[1]}</span></div>`).join(''):'<div class="empty">继续记录几次，这里会帮助你发现规律，而不是给你贴标签。</div>'}
+function renderHistory(){const f=$('#filter-emotion').value,q=$('#search').value.trim().toLowerCase();const rs=[...records].filter(r=>(!f||r.emotion===f)&&(!q||JSON.stringify(r).toLowerCase().includes(q))).sort((a,b)=>b.time.localeCompare(a.time));$('#entry-list').innerHTML=rs.length?rs.map(r=>`<article class="entry"><div class="entry-top"><div class="entry-title"><span class="entry-emoji">${emotionInfo(r.emotion).e}</span><div><b>${esc(r.emotion)} · ${r.intensity}/10</b><div class="entry-meta">${dateText(r.time)}</div></div></div><button class="delete" data-delete="${r.id}" aria-label="删除这条记录">删除</button></div>${r.event?`<p><b>发生：</b>${esc(r.event)}</p>`:''}${r.thought?`<p><b>想法：</b>${esc(r.thought)}</p>`:''}${r.positive?`<p><b>值得记住：</b>${esc(r.positive)}</p>`:''}${r.note?`<p>${esc(r.note)}</p>`:''}<div class="tags">${[...(r.body||[]),...(r.needs||[]),r.action].filter(Boolean).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div></article>`).join(''):'<div class="empty">没有符合条件的记录。</div>'}
+$('#filter-emotion').addEventListener('change',renderHistory);$('#search').addEventListener('input',renderHistory);$('#entry-list').addEventListener('click',e=>{const id=e.target.dataset.delete;if(id&&confirm('确定删除这条记录吗？')){records=records.filter(r=>r.id!==id);save();renderAll()}});
+$$('.tab').forEach(t=>t.addEventListener('click',()=>{$$('.tab').forEach(x=>x.classList.remove('active'));$$('.view').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#'+t.dataset.view).classList.add('active');renderAll()}));
+function download(name,text,type){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+$('#save-happy-list').addEventListener('click',()=>{happyActivities=$('#happy-list').value.split('\n').map(x=>x.trim()).filter(Boolean);localStorage.setItem(HAPPY_KEY,JSON.stringify(happyActivities));show('#data-notice','开心清单已保存，今后的建议会优先从这里选择。');renderSuggestions()});
+$('#export-json').addEventListener('click',()=>download('心晴-情绪记录备份.json',JSON.stringify({version:2,exportedAt:new Date().toISOString(),records,customEmotions,happyActivities},null,2),'application/json'));
+$('#export-csv').addEventListener('click',()=>{const rows=[['时间','情绪','强度','事件','想法','身体','需要','行动','值得记住','补充'],...records.map(r=>[r.time,r.emotion,r.intensity,r.event,r.thought,(r.body||[]).join('|'),(r.needs||[]).join('|'),r.action,r.positive,r.note])];const csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');download('心晴-情绪记录.csv',csv,'text/csv;charset=utf-8')});
+$('#import-json').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(reader.result);if(!Array.isArray(d.records))throw Error();records=d.records;customEmotions=Array.isArray(d.customEmotions)?d.customEmotions:customEmotions;happyActivities=Array.isArray(d.happyActivities)?d.happyActivities:happyActivities;save();localStorage.setItem(CUSTOM_KEY,JSON.stringify(customEmotions));localStorage.setItem(HAPPY_KEY,JSON.stringify(happyActivities));renderEmotionChoices();$('#happy-list').value=happyActivities.join('\n');renderAll();show('#data-notice','备份已经导入。')}catch(_){show('#data-notice','无法识别这个备份文件。')}};reader.readAsText(file)});
+$('#clear-data').addEventListener('click',()=>{if(confirm('确定清空全部记录吗？请先导出备份。此操作无法撤销。')){records=[];save();renderAll();show('#data-notice','本地记录已清空。')}});
+$('#install-help').addEventListener('click',()=>$('#install-dialog').showModal());
+function renderAll(){renderToday();renderOverview();renderHistory()}
+setup();renderAll();renderSuggestions();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
