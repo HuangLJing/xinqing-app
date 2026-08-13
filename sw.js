@@ -1,4 +1,4 @@
-const CACHE = "xin-qing-pwa-v6";
+const CACHE = "xin-qing-pwa-v7";
 const APP_FILES = [
   "./",
   "./index.html",
